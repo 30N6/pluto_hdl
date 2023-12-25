@@ -218,54 +218,41 @@ ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_2D_TRANSFER 0
 ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_DATA_WIDTH_SRC 64
 ad_ip_parameter axi_ad9361_adc_dma CONFIG.SYNC_TRANSFER_START {true}
 
-ad_add_decimation_filter "rx_fir_decimator" 8 2 1 {61.44} {61.44} \
-                         "$ad_hdl_dir/library/util_fir_int/coefile_int.coe"
-ad_ip_instance xlslice decim_slice
-ad_ip_instance util_cpack2 cpack
-
 # connections
 
-ad_connect  rx_clk_in axi_ad9361/rx_clk_in
-ad_connect  rx_frame_in axi_ad9361/rx_frame_in
-ad_connect  rx_data_in axi_ad9361/rx_data_in
-ad_connect  tx_clk_out axi_ad9361/tx_clk_out
-ad_connect  tx_frame_out axi_ad9361/tx_frame_out
-ad_connect  tx_data_out axi_ad9361/tx_data_out
-ad_connect  enable axi_ad9361/enable
-ad_connect  txnrx axi_ad9361/txnrx
-ad_connect  up_enable axi_ad9361/up_enable
-ad_connect  up_txnrx axi_ad9361/up_txnrx
+ad_connect  rx_clk_in     axi_ad9361/rx_clk_in
+ad_connect  rx_frame_in   axi_ad9361/rx_frame_in
+ad_connect  rx_data_in    axi_ad9361/rx_data_in
+ad_connect  tx_clk_out    axi_ad9361/tx_clk_out
+ad_connect  tx_frame_out  axi_ad9361/tx_frame_out
+ad_connect  tx_data_out   axi_ad9361/tx_data_out
+ad_connect  enable        axi_ad9361/enable
+ad_connect  txnrx         axi_ad9361/txnrx
+ad_connect  up_enable     axi_ad9361/up_enable
+ad_connect  up_txnrx      axi_ad9361/up_txnrx
 
-ad_connect  axi_ad9361/tdd_sync GND
-ad_connect  sys_200m_clk axi_ad9361/delay_clk
-ad_connect  axi_ad9361/l_clk axi_ad9361/clk
+ad_connect  axi_ad9361/tdd_sync   GND
+ad_connect  sys_200m_clk          axi_ad9361/delay_clk
+ad_connect  axi_ad9361/l_clk      axi_ad9361/clk
 
-ad_connect axi_ad9361/l_clk rx_fir_decimator/aclk
+ad_ip_instance util_cpack2 cpack
+ad_connect axi_ad9361/l_clk       cpack/clk
+ad_connect axi_ad9361/rst         cpack/reset
 
-ad_connect axi_ad9361/adc_valid_i0 rx_fir_decimator/valid_in_0
-ad_connect axi_ad9361/adc_enable_i0 rx_fir_decimator/enable_in_0
-ad_connect axi_ad9361/adc_data_i0 rx_fir_decimator/data_in_0
-ad_connect axi_ad9361/adc_valid_q0 rx_fir_decimator/valid_in_1
-ad_connect axi_ad9361/adc_enable_q0 rx_fir_decimator/enable_in_1
-ad_connect axi_ad9361/adc_data_q0 rx_fir_decimator/data_in_1
+ad_connect cpack/enable_2           GND
+ad_connect cpack/enable_3           GND
+ad_connect cpack/fifo_wr_data_2     GND
+ad_connect cpack/fifo_wr_data_3     GND
 
-ad_connect axi_ad9361/l_clk cpack/clk
-ad_connect axi_ad9361/rst cpack/reset
-
-ad_connect axi_ad9361/adc_enable_i1 cpack/enable_2
-ad_connect axi_ad9361/adc_data_i1 cpack/fifo_wr_data_2
-ad_connect axi_ad9361/adc_enable_q1 cpack/enable_3
-ad_connect axi_ad9361/adc_data_q1 cpack/fifo_wr_data_3
-
-ad_connect cpack/enable_0               rx_fir_decimator/enable_out_0
-ad_connect cpack/enable_1               rx_fir_decimator/enable_out_1
-ad_connect cpack/fifo_wr_data_0         rx_fir_decimator/data_out_0
-ad_connect cpack/fifo_wr_data_1         rx_fir_decimator/data_out_1
-ad_connect rx_fir_decimator/valid_out_0 cpack/fifo_wr_en
+ad_connect cpack/enable_0           axi_ad9361/adc_enable_i0
+ad_connect cpack/enable_1           axi_ad9361/adc_enable_q0
+ad_connect cpack/fifo_wr_data_0     axi_ad9361/adc_data_i0
+ad_connect cpack/fifo_wr_data_1     axi_ad9361/adc_data_q0
+ad_connect axi_ad9361/adc_valid_i0  cpack/fifo_wr_en
 
 ad_connect axi_ad9361_adc_dma/fifo_wr   cpack/packed_fifo_wr
-ad_connect axi_ad9361/up_adc_gpio_out   decim_slice/Din
-ad_connect rx_fir_decimator/active      decim_slice/Dout
+#ad_connect axi_ad9361/up_adc_gpio_out   decim_slice/Din
+#ad_connect rx_fir_decimator/active      decim_slice/Dout
 
 ad_connect axi_ad9361/dac_data_i0           GND
 ad_connect axi_ad9361/dac_data_q0           GND
