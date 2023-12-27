@@ -44,6 +44,7 @@ ad_ip_parameter sys_ps7 CONFIG.PCW_PRESET_BANK1_VOLTAGE {LVCMOS 1.8V}
 ad_ip_parameter sys_ps7 CONFIG.PCW_PACKAGE_NAME clg225
 ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP1 1
 ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP2 1
+ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP3 1
 ad_ip_parameter sys_ps7 CONFIG.PCW_EN_CLK1_PORT 1
 ad_ip_parameter sys_ps7 CONFIG.PCW_EN_RST1_PORT 1
 ad_ip_parameter sys_ps7 CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ 100.0
@@ -218,6 +219,18 @@ ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_2D_TRANSFER 0
 ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_DATA_WIDTH_SRC 64
 ad_ip_parameter axi_ad9361_adc_dma CONFIG.SYNC_TRANSFER_START {true}
 
+ad_ip_instance axi_dmac axi_custom_dma
+ad_ip_parameter axi_custom_dma CONFIG.DMA_TYPE_SRC          1
+ad_ip_parameter axi_custom_dma CONFIG.DMA_TYPE_DEST         0
+ad_ip_parameter axi_custom_dma CONFIG.CYCLIC                0
+ad_ip_parameter axi_custom_dma CONFIG.AXI_SLICE_SRC         1
+ad_ip_parameter axi_custom_dma CONFIG.AXI_SLICE_DEST        0
+ad_ip_parameter axi_custom_dma CONFIG.DMA_2D_TRANSFER       0
+ad_ip_parameter axi_custom_dma CONFIG.DMA_DATA_WIDTH_SRC    32
+ad_ip_parameter axi_custom_dma CONFIG.SYNC_TRANSFER_START   1
+ad_ip_parameter axi_custom_dma CONFIG.ENABLE_DIAGNOSTICS_IF 1
+
+
 # connections
 
 ad_connect  rx_clk_in     axi_ad9361/rx_clk_in
@@ -263,6 +276,7 @@ ad_connect axi_ad9361_dac_dma/m_axis_ready  VCC
 
 ad_connect  axi_ad9361/l_clk        axi_ad9361_adc_dma/fifo_wr_clk
 ad_connect  axi_ad9361/l_clk        axi_ad9361_dac_dma/m_axis_aclk
+ad_connect  axi_ad9361/l_clk        axi_custom_dma/s_axis_aclk
 ad_connect  cpack/fifo_wr_overflow  axi_ad9361/adc_dovf
 
 # External TDD
@@ -301,6 +315,7 @@ ad_cpu_interconnect 0x7C400000 axi_ad9361_adc_dma
 ad_cpu_interconnect 0x7C420000 axi_ad9361_dac_dma
 ad_cpu_interconnect 0x7C430000 axi_spi
 ad_cpu_interconnect 0x7C440000 axi_tdd_0
+ad_cpu_interconnect 0x7C450000 axi_custom_dma
 
 ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP1 {1}
 ad_connect sys_cpu_clk sys_ps7/S_AXI_HP1_ACLK
@@ -320,13 +335,27 @@ create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
                     [get_bd_addr_segs sys_ps7/S_AXI_HP2/HP2_DDR_LOWOCM] \
                     SEG_sys_ps7_HP2_DDR_LOWOCM
 
-ad_connect sys_cpu_clk axi_ad9361_dac_dma/m_src_axi_aclk
-ad_connect sys_cpu_clk axi_ad9361_adc_dma/m_dest_axi_aclk
-ad_connect sys_cpu_resetn axi_ad9361_adc_dma/m_dest_axi_aresetn
+ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP3 {1}
+ad_connect sys_cpu_clk sys_ps7/S_AXI_HP3_ACLK
+ad_connect axi_custom_dma/m_dest_axi sys_ps7/S_AXI_HP3
+
+create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
+                    [get_bd_addr_spaces axi_custom_dma/m_dest_axi] \
+                    [get_bd_addr_segs sys_ps7/S_AXI_HP3/HP3_DDR_LOWOCM] \
+                    SEG_sys_ps7_HP3_DDR_LOWOCM
+
+ad_connect sys_cpu_clk    axi_ad9361_dac_dma/m_src_axi_aclk
 ad_connect sys_cpu_resetn axi_ad9361_dac_dma/m_src_axi_aresetn
+
+ad_connect sys_cpu_clk    axi_ad9361_adc_dma/m_dest_axi_aclk
+ad_connect sys_cpu_resetn axi_ad9361_adc_dma/m_dest_axi_aresetn
+
+ad_connect sys_cpu_clk    axi_custom_dma/m_dest_axi_aclk
+ad_connect sys_cpu_resetn axi_custom_dma/m_dest_axi_aresetn
 
 # interrupts
 
+ad_cpu_interrupt ps-14 mb-14 axi_custom_dma/irq
 ad_cpu_interrupt ps-13 mb-13 axi_ad9361_adc_dma/irq
 ad_cpu_interrupt ps-12 mb-12 axi_ad9361_dac_dma/irq
 ad_cpu_interrupt ps-11 mb-11 axi_spi/ip2intc_irpt
