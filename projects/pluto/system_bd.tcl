@@ -366,6 +366,9 @@ create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
                     [get_bd_addr_segs sys_ps7/S_AXI_HP0/HP0_DDR_LOWOCM] \
                     SEG_sys_ps7_HP0_DDR_LOWOCM
 
+# DMA loopback for testing
+ad_connect axi_custom_dma_h2d/m_axis axi_custom_dma_d2h/s_axis
+
 ad_connect sys_cpu_clk    axi_ad9361_dac_dma/m_src_axi_aclk
 ad_connect sys_cpu_resetn axi_ad9361_dac_dma/m_src_axi_aresetn
 ad_connect sys_cpu_clk    axi_ad9361_adc_dma/m_dest_axi_aclk
