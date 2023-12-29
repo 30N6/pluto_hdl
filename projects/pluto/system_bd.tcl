@@ -385,5 +385,5 @@ ad_cpu_interrupt ps-13  mb-13   axi_ad9361_adc_dma/irq
 ad_cpu_interrupt ps-12  mb-12   axi_ad9361_dac_dma/irq
 ad_cpu_interrupt ps-11  mb-11   axi_spi/ip2intc_irpt
 
-ad_cpu_interrupt ps-2   mb-2    axi_custom_dma_d2h/irq
-ad_cpu_interrupt ps-3   mb-3    axi_custom_dma_h2d/irq
+ad_cpu_interrupt ps-9   mb-9    axi_custom_dma_d2h/irq
+ad_cpu_interrupt ps-10  mb-10   axi_custom_dma_h2d/irq
