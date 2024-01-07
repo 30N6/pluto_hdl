@@ -1,0 +1,3 @@
+[submodule "library/hdl"]
+	path = library/hdl
+	url = git@github.com:30N6/hdl.git
