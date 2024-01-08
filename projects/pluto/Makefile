@@ -20,5 +20,6 @@ LIB_DEPS += axi_dmac
 LIB_DEPS += axi_tdd
 LIB_DEPS += util_pack/util_cpack2
 LIB_DEPS += util_pack/util_upack2
+LIB_DEPS += hdl/adsb
 
 include ../scripts/project-xilinx.mk
