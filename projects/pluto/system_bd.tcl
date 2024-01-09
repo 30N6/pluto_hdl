@@ -243,6 +243,7 @@ ad_ip_parameter axi_custom_dma_h2d CONFIG.DMA_DATA_WIDTH_DEST   32
 # ADS-B demodulator core
 ad_ip_instance adsb adsb_demod
 ad_ip_parameter adsb_demod CONFIG.AXI_DATA_WIDTH  32
+ad_ip_parameter adsb_demod CONFIG.ADC_WIDTH       16
 ad_ip_parameter adsb_demod CONFIG.IQ_WIDTH        14
 
 # connections
