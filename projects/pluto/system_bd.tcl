@@ -407,3 +407,94 @@ ad_cpu_interrupt ps-11  mb-11   axi_spi/ip2intc_irpt
 
 ad_cpu_interrupt ps-9   mb-9    axi_custom_dma_d2h/irq
 ad_cpu_interrupt ps-10  mb-10   axi_custom_dma_h2d/irq
+
+#
+# ila - axi
+
+ad_ip_instance ila ila_axi
+ad_ip_parameter ila_axi CONFIG.C_MONITOR_TYPE Native
+ad_ip_parameter ila_axi CONFIG.C_TRIGIN_EN false
+ad_ip_parameter ila_axi CONFIG.C_EN_STRG_QUAL   1
+ad_ip_parameter ila_axi CONFIG.C_NUM_OF_PROBES  10
+
+ad_ip_parameter ila_axi CONFIG.C_PROBE0_WIDTH   1
+ad_ip_parameter ila_axi CONFIG.C_PROBE1_WIDTH   1
+ad_ip_parameter ila_axi CONFIG.C_PROBE2_WIDTH   1
+ad_ip_parameter ila_axi CONFIG.C_PROBE3_WIDTH   32
+ad_ip_parameter ila_axi CONFIG.C_PROBE4_WIDTH   1
+ad_ip_parameter ila_axi CONFIG.C_PROBE5_WIDTH   1
+ad_ip_parameter ila_axi CONFIG.C_PROBE6_WIDTH   1
+ad_ip_parameter ila_axi CONFIG.C_PROBE7_WIDTH   1
+ad_ip_parameter ila_axi CONFIG.C_PROBE8_WIDTH   32
+ad_ip_parameter ila_axi CONFIG.C_PROBE9_WIDTH   1
+
+ad_connect  ila_axi/clk       sys_cpu_clk
+ad_connect  ila_axi/probe0    adsb_demod/Debug_S_axis_resetn
+ad_connect  ila_axi/probe1    adsb_demod/Debug_S_axis_ready
+ad_connect  ila_axi/probe2    adsb_demod/Debug_S_axis_valid
+ad_connect  ila_axi/probe3    adsb_demod/Debug_S_axis_data
+ad_connect  ila_axi/probe4    adsb_demod/Debug_S_axis_last
+ad_connect  ila_axi/probe5    adsb_demod/Debug_M_axis_resetn
+ad_connect  ila_axi/probe6    adsb_demod/Debug_M_axis_ready
+ad_connect  ila_axi/probe7    adsb_demod/Debug_M_axis_valid
+ad_connect  ila_axi/probe8    adsb_demod/Debug_M_axis_data
+ad_connect  ila_axi/probe9    adsb_demod/Debug_M_axis_last
+
+# ila - data
+ad_ip_instance ila ila_data
+ad_ip_parameter ila_data CONFIG.C_MONITOR_TYPE Native
+ad_ip_parameter ila_data CONFIG.C_TRIGIN_EN false
+ad_ip_parameter ila_data CONFIG.C_EN_STRG_QUAL   1
+ad_ip_parameter ila_data CONFIG.C_NUM_OF_PROBES  22
+
+ad_ip_parameter ila_data CONFIG.C_PROBE0_WIDTH   1
+ad_ip_parameter ila_data CONFIG.C_PROBE1_WIDTH   1
+ad_ip_parameter ila_data CONFIG.C_PROBE2_WIDTH   1
+ad_ip_parameter ila_data CONFIG.C_PROBE3_WIDTH   64
+
+ad_ip_parameter ila_data CONFIG.C_PROBE4_WIDTH   1
+ad_ip_parameter ila_data CONFIG.C_PROBE5_WIDTH   14
+ad_ip_parameter ila_data CONFIG.C_PROBE6_WIDTH   14
+ad_ip_parameter ila_data CONFIG.C_PROBE7_WIDTH   1
+
+ad_ip_parameter ila_data CONFIG.C_PROBE8_WIDTH   1
+ad_ip_parameter ila_data CONFIG.C_PROBE9_WIDTH   16
+ad_ip_parameter ila_data CONFIG.C_PROBE10_WIDTH  16
+ad_ip_parameter ila_data CONFIG.C_PROBE11_WIDTH  14
+
+ad_ip_parameter ila_data CONFIG.C_PROBE12_WIDTH  1
+ad_ip_parameter ila_data CONFIG.C_PROBE13_WIDTH  112
+ad_ip_parameter ila_data CONFIG.C_PROBE14_WIDTH  16
+ad_ip_parameter ila_data CONFIG.C_PROBE15_WIDTH  14
+
+ad_ip_parameter ila_data CONFIG.C_PROBE16_WIDTH   1
+ad_ip_parameter ila_data CONFIG.C_PROBE17_WIDTH   64
+ad_ip_parameter ila_data CONFIG.C_PROBE18_WIDTH   1
+ad_ip_parameter ila_data CONFIG.C_PROBE19_WIDTH   1
+
+ad_ip_parameter ila_data CONFIG.C_PROBE20_WIDTH   32
+ad_ip_parameter ila_data CONFIG.C_PROBE21_WIDTH   1
+
+ad_connect  ila_data/clk       axi_ad9361/l_clk
+ad_connect  ila_data/probe0    adsb_demod/Debug_w_combined_rst
+ad_connect  ila_data/probe1    adsb_demod/Debug_w_extended_rst
+ad_connect  ila_data/probe2    adsb_demod/Debug_w_enable
+ad_connect  ila_data/probe3    adsb_demod/Debug_r_timestamp
+ad_connect  ila_data/probe4    adsb_demod/Debug_r_adc_valid
+ad_connect  ila_data/probe5    adsb_demod/Debug_r_adc_data_i
+ad_connect  ila_data/probe6    adsb_demod/Debug_r_adc_data_q
+ad_connect  ila_data/probe7    adsb_demod/Debug_w_detector_valid
+ad_connect  ila_data/probe8    adsb_demod/Debug_w_detector_start
+ad_connect  ila_data/probe9    adsb_demod/Debug_w_detector_filtered_mag
+ad_connect  ila_data/probe10   adsb_demod/Debug_w_detector_preamble_s
+ad_connect  ila_data/probe11   adsb_demod/Debug_w_detector_preamble_sn
+ad_connect  ila_data/probe12   adsb_demod/Debug_w_sampler_valid
+ad_connect  ila_data/probe13   adsb_demod/Debug_w_sampler_message_data
+ad_connect  ila_data/probe14   adsb_demod/Debug_w_sampler_preamble_s
+ad_connect  ila_data/probe15   adsb_demod/Debug_w_sampler_preamble_sn
+ad_connect  ila_data/probe16   adsb_demod/Debug_w_sampler_crc_match
+ad_connect  ila_data/probe17   adsb_demod/Debug_w_sampler_timestamp
+ad_connect  ila_data/probe18   adsb_demod/Debug_w_reporter_axis_ready
+ad_connect  ila_data/probe19   adsb_demod/Debug_w_reporter_axis_valid
+ad_connect  ila_data/probe20   adsb_demod/Debug_w_reporter_axis_data
+ad_connect  ila_data/probe21   adsb_demod/Debug_w_reporter_axis_last
