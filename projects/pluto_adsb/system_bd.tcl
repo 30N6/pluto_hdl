@@ -387,4 +387,23 @@ ad_connect sys_cpu_clk    axi_custom_dma_h2d/m_axis_aclk
 
 # ADS-B demodulator connections
 ad_connect axi_ad9361/l_clk           adsb_demod/Data_clk
-a
+ad_connect axi_ad9361/rst             adsb_demod/Data_rst
+ad_connect axi_ad9361/adc_valid_i0    adsb_demod/Adc_valid
+ad_connect axi_ad9361/adc_data_i0     adsb_demod/Adc_data_i
+ad_connect axi_ad9361/adc_data_q0     adsb_demod/Adc_data_q
+
+ad_connect sys_cpu_clk                adsb_demod/S_axis_clk
+ad_connect sys_cpu_resetn             adsb_demod/S_axis_resetn
+ad_connect sys_cpu_clk                adsb_demod/M_axis_clk
+ad_connect sys_cpu_resetn             adsb_demod/M_axis_resetn
+ad_connect axi_custom_dma_h2d/m_axis  adsb_demod/S_axis
+ad_connect axi_custom_dma_d2h/s_axis  adsb_demod/M_axis
+
+# interrupts
+
+ad_cpu_interrupt ps-13  mb-13   axi_ad9361_adc_dma/irq
+ad_cpu_interrupt ps-12  mb-12   axi_ad9361_dac_dma/irq
+ad_cpu_interrupt ps-11  mb-11   axi_spi/ip2intc_irpt
+
+ad_cpu_interrupt ps-9   mb-9    axi_custom_dma_d2h/irq
+ad_cpu_interrupt ps-10  mb-10   axi_custom_dma_h2d/irq
