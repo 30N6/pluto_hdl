@@ -240,12 +240,6 @@ ad_ip_parameter axi_custom_dma_h2d CONFIG.AXI_SLICE_DEST        0
 ad_ip_parameter axi_custom_dma_h2d CONFIG.DMA_2D_TRANSFER       0
 ad_ip_parameter axi_custom_dma_h2d CONFIG.DMA_DATA_WIDTH_DEST   32
 
-# ADS-B demodulator core
-ad_ip_instance adsb adsb_demod
-ad_ip_parameter adsb_demod CONFIG.AXI_DATA_WIDTH  32
-ad_ip_parameter adsb_demod CONFIG.ADC_WIDTH       16
-ad_ip_parameter adsb_demod CONFIG.IQ_WIDTH        14
-
 # connections
 
 ad_connect  rx_clk_in     axi_ad9361/rx_clk_in
@@ -291,6 +285,8 @@ ad_connect axi_ad9361_dac_dma/m_axis_ready  VCC
 
 ad_connect  axi_ad9361/l_clk        axi_ad9361_adc_dma/fifo_wr_clk
 ad_connect  axi_ad9361/l_clk        axi_ad9361_dac_dma/m_axis_aclk
+ad_connect  axi_ad9361/l_clk        axi_custom_dma_d2h/s_axis_aclk
+ad_connect  axi_ad9361/l_clk        axi_custom_dma_h2d/m_axis_aclk
 ad_connect  cpack/fifo_wr_overflow  axi_ad9361/adc_dovf
 
 # External TDD
@@ -371,7 +367,7 @@ create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
                     SEG_sys_ps7_HP0_DDR_LOWOCM
 
 # DMA loopback for testing
-#ad_connect axi_custom_dma_h2d/m_axis axi_custom_dma_d2h/s_axis
+ad_connect axi_custom_dma_h2d/m_axis axi_custom_dma_d2h/s_axis
 
 ad_connect sys_cpu_clk    axi_ad9361_dac_dma/m_src_axi_aclk
 ad_connect sys_cpu_resetn axi_ad9361_dac_dma/m_src_axi_aresetn
@@ -382,9 +378,12 @@ ad_connect sys_cpu_clk    axi_custom_dma_d2h/m_dest_axi_aclk
 ad_connect sys_cpu_resetn axi_custom_dma_d2h/m_dest_axi_aresetn
 ad_connect sys_cpu_clk    axi_custom_dma_h2d/m_src_axi_aclk
 ad_connect sys_cpu_resetn axi_custom_dma_h2d/m_src_axi_aresetn
-ad_connect sys_cpu_clk    axi_custom_dma_d2h/s_axis_aclk
-ad_connect sys_cpu_clk    axi_custom_dma_h2d/m_axis_aclk
 
-# ADS-B demodulator connections
-ad_connect axi_ad9361/l_clk           adsb_demod/Data_clk
-a
+# interrupts
+
+ad_cpu_interrupt ps-13  mb-13   axi_ad9361_adc_dma/irq
+ad_cpu_interrupt ps-12  mb-12   axi_ad9361_dac_dma/irq
+ad_cpu_interrupt ps-11  mb-11   axi_spi/ip2intc_irpt
+
+ad_cpu_interrupt ps-9   mb-9    axi_custom_dma_d2h/irq
+ad_cpu_interrupt ps-10  mb-10   axi_custom_dma_h2d/irq
