@@ -20,7 +20,6 @@ LIB_DEPS += axi_dmac
 LIB_DEPS += axi_tdd
 LIB_DEPS += util_pack/util_cpack2
 LIB_DEPS += util_pack/util_upack2
-LIB_DEPS += hdl/dsp
-LIB_DEPS += hdl/esm
+LIB_DEPS += hdl/esm_receiver
 
 include ../scripts/project-xilinx.mk
