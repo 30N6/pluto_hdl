@@ -22,6 +22,9 @@ create_bd_port -dir I -from 17 -to 0 gpio_i
 create_bd_port -dir O -from 17 -to 0 gpio_o
 create_bd_port -dir O -from 17 -to 0 gpio_t
 
+create_bd_port -dir I -from 7 -to 0 ad9361_status
+create_bd_port -dir O -from 3 -to 0 ad9361_ctl
+
 create_bd_port -dir O spi_csn_o
 create_bd_port -dir I spi_csn_i
 create_bd_port -dir I spi_clk_i
@@ -391,6 +394,9 @@ ad_connect axi_ad9361/rst             esm_rx/Adc_rst
 ad_connect axi_ad9361/adc_valid_i0    esm_rx/Adc_valid
 ad_connect axi_ad9361/adc_data_i0     esm_rx/Adc_data_i
 ad_connect axi_ad9361/adc_data_q0     esm_rx/Adc_data_q
+
+ad_connect ad9361_status              esm_rx/Ad9361_status
+ad_connect ad9361_ctl                 esm_rx/Ad9361_control
 
 ad_connect sys_cpu_clk                esm_rx/S_axis_clk
 ad_connect sys_cpu_resetn             esm_rx/S_axis_resetn

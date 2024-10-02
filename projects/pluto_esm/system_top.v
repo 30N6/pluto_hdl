@@ -94,6 +94,11 @@ module system_top (
   wire    [17:0]  gpio_o;
   wire    [17:0]  gpio_t;
 
+  wire    [3:0]   w_ad9361_ctl;
+  wire    [7:0]   w_ad9361_status;
+  wire    [13:0]  w_gpio_t_mod;
+  wire    [13:0]  w_gpio_o_mod;
+
   wire            iic_scl;
   wire            iic_sda;
   wire            phaser_enable;
@@ -106,11 +111,20 @@ module system_top (
 
   // instantiations
 
+  assign w_gpio_t_mod[7:0]   = 8'hFF;
+  assign w_gpio_t_mod[11:8]  = 4'h0;
+  assign w_gpio_t_mod[13:12] = gpio_t[13:12];
+
+  assign w_gpio_o_mod[13:12] = gpio_o[13:12];
+  assign w_gpio_o_mod[11:8]  = w_ad9361_ctl;
+  assign w_gpio_o_mod[7:0]   = 8'h00;
+  assign w_ad9361_status     = gpio_i[7:0];
+
   ad_iobuf #(
     .DATA_WIDTH(14)
   ) i_iobuf (
-    .dio_t (gpio_t[13:0]),
-    .dio_i (gpio_o[13:0]),
+    .dio_t (w_gpio_t_mod),
+    .dio_i (w_gpio_o_mod),
     .dio_o (gpio_i[13:0]),
     .dio_p ({ gpio_resetb,        // 13:13
               gpio_en_agc,        // 12:12
@@ -166,6 +180,8 @@ module system_top (
     .gpio_i (gpio_i),
     .gpio_o (gpio_o),
     .gpio_t (gpio_t),
+    .ad9361_ctl     (w_ad9361_ctl),
+    .ad9361_status  (w_ad9361_status),
     .iic_main_scl_io (iic_scl),
     .iic_main_sda_io (iic_sda),
     .rx_clk_in (rx_clk_in),
