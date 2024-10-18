@@ -297,6 +297,8 @@ proc adi_project_create {project_name mode parameter_list device {board "not-app
     }
   }
 
+  set_property strategy Performance_Auto_1 [get_runs impl_1]
+
 }
 
 ## Add source files to an exiting project.
