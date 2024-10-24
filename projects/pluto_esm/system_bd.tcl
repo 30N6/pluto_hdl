@@ -243,7 +243,8 @@ ad_ip_parameter axi_custom_dma_h2d CONFIG.AXI_SLICE_DEST        0
 ad_ip_parameter axi_custom_dma_h2d CONFIG.DMA_2D_TRANSFER       0
 ad_ip_parameter axi_custom_dma_h2d CONFIG.DMA_DATA_WIDTH_DEST   32
 
-# ADS-B demodulator core
+# ESM receiver
+ad_ip_instance esm_clocks esm_clocks
 ad_ip_instance esm_receiver esm_rx
 ad_ip_parameter esm_rx CONFIG.AXI_DATA_WIDTH  32
 ad_ip_parameter esm_rx CONFIG.ADC_WIDTH       16
@@ -388,7 +389,11 @@ ad_connect sys_cpu_resetn axi_custom_dma_h2d/m_src_axi_aresetn
 ad_connect sys_cpu_clk    axi_custom_dma_d2h/s_axis_aclk
 ad_connect sys_cpu_clk    axi_custom_dma_h2d/m_axis_aclk
 
-# ADS-B demodulator connections
+# ESM connections
+ad_connect axi_ad9361/l_clk           esm_clocks/Adc_clk
+ad_connect axi_ad9361/rst             esm_clocks/Adc_rst
+
+ad_connect esm_clocks/Adc_clk_x4      esm_rx/Adc_clk_x4
 ad_connect axi_ad9361/l_clk           esm_rx/Adc_clk
 ad_connect axi_ad9361/rst             esm_rx/Adc_rst
 ad_connect axi_ad9361/adc_valid_i0    esm_rx/Adc_valid
