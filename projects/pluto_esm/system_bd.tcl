@@ -3,6 +3,8 @@
 source $ad_hdl_dir/projects/common/xilinx/adi_fir_filter_bd.tcl
 source $ad_hdl_dir/library/axi_tdd/scripts/axi_tdd.tcl
 
+global INSERT_ILA
+
 # default ports
 
 create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 ddr
@@ -202,27 +204,6 @@ ad_ip_parameter axi_ad9361 CONFIG.MODE_1R1T             1
 ad_ip_parameter axi_ad9361 CONFIG.ADC_INIT_DELAY        21
 ad_ip_parameter axi_ad9361 CONFIG.DAC_DATAPATH_DISABLE  1
 
-
-ad_ip_instance axi_dmac axi_ad9361_dac_dma
-ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_TYPE_SRC 0
-ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_TYPE_DEST 1
-ad_ip_parameter axi_ad9361_dac_dma CONFIG.CYCLIC 1
-ad_ip_parameter axi_ad9361_dac_dma CONFIG.AXI_SLICE_SRC 0
-ad_ip_parameter axi_ad9361_dac_dma CONFIG.AXI_SLICE_DEST 0
-ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_2D_TRANSFER 0
-ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_DATA_WIDTH_DEST 64
-
-ad_ip_instance axi_dmac axi_ad9361_adc_dma
-ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_TYPE_SRC 2
-ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_TYPE_DEST 0
-ad_ip_parameter axi_ad9361_adc_dma CONFIG.CYCLIC 0
-ad_ip_parameter axi_ad9361_adc_dma CONFIG.SYNC_TRANSFER_START 0
-ad_ip_parameter axi_ad9361_adc_dma CONFIG.AXI_SLICE_SRC 0
-ad_ip_parameter axi_ad9361_adc_dma CONFIG.AXI_SLICE_DEST 0
-ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_2D_TRANSFER 0
-ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_DATA_WIDTH_SRC 64
-ad_ip_parameter axi_ad9361_adc_dma CONFIG.SYNC_TRANSFER_START {true}
-
 ad_ip_instance axi_dmac axi_custom_dma_d2h
 ad_ip_parameter axi_custom_dma_d2h CONFIG.DMA_TYPE_SRC          1
 ad_ip_parameter axi_custom_dma_d2h CONFIG.DMA_TYPE_DEST         0
@@ -282,7 +263,6 @@ ad_connect cpack/fifo_wr_data_0     axi_ad9361/adc_data_i0
 ad_connect cpack/fifo_wr_data_1     axi_ad9361/adc_data_q0
 ad_connect axi_ad9361/adc_valid_i0  cpack/fifo_wr_en
 
-ad_connect axi_ad9361_adc_dma/fifo_wr   cpack/packed_fifo_wr
 #ad_connect axi_ad9361/up_adc_gpio_out   decim_slice/Din
 #ad_connect rx_fir_decimator/active      decim_slice/Dout
 
@@ -291,68 +271,102 @@ ad_connect axi_ad9361/dac_data_q0           GND
 ad_connect axi_ad9361/dac_data_i1           GND
 ad_connect axi_ad9361/dac_data_q1           GND
 ad_connect axi_ad9361/dac_dunf              GND
-ad_connect axi_ad9361_dac_dma/m_axis_ready  VCC
-
-ad_connect  axi_ad9361/l_clk        axi_ad9361_adc_dma/fifo_wr_clk
-ad_connect  axi_ad9361/l_clk        axi_ad9361_dac_dma/m_axis_aclk
 ad_connect  cpack/fifo_wr_overflow  axi_ad9361/adc_dovf
 
-# External TDD
-set TDD_CHANNEL_CNT 3
-set TDD_DEFAULT_POL 0b010
-set TDD_REG_WIDTH 32
-set TDD_BURST_WIDTH 32
-set TDD_SYNC_WIDTH 0
-set TDD_SYNC_INT 0
-set TDD_SYNC_EXT 1
-set TDD_SYNC_EXT_CDC 1
-ad_tdd_gen_create axi_tdd_0 $TDD_CHANNEL_CNT \
-                            $TDD_DEFAULT_POL \
-                            $TDD_REG_WIDTH \
-                            $TDD_BURST_WIDTH \
-                            $TDD_SYNC_WIDTH \
-                            $TDD_SYNC_INT \
-                            $TDD_SYNC_EXT \
-                            $TDD_SYNC_EXT_CDC
+if {$INSERT_ILA == 0} {
+  ad_ip_instance axi_dmac axi_ad9361_dac_dma
+  ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_TYPE_SRC 0
+  ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_TYPE_DEST 1
+  ad_ip_parameter axi_ad9361_dac_dma CONFIG.CYCLIC 1
+  ad_ip_parameter axi_ad9361_dac_dma CONFIG.AXI_SLICE_SRC 0
+  ad_ip_parameter axi_ad9361_dac_dma CONFIG.AXI_SLICE_DEST 0
+  ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_2D_TRANSFER 0
+  ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_DATA_WIDTH_DEST 64
 
-ad_ip_instance util_vector_logic logic_inv [list \
-  C_OPERATION {not} \
-  C_SIZE 1]
+  ad_ip_instance axi_dmac axi_ad9361_adc_dma
+  ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_TYPE_SRC 2
+  ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_TYPE_DEST 0
+  ad_ip_parameter axi_ad9361_adc_dma CONFIG.CYCLIC 0
+  ad_ip_parameter axi_ad9361_adc_dma CONFIG.SYNC_TRANSFER_START 0
+  ad_ip_parameter axi_ad9361_adc_dma CONFIG.AXI_SLICE_SRC 0
+  ad_ip_parameter axi_ad9361_adc_dma CONFIG.AXI_SLICE_DEST 0
+  ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_2D_TRANSFER 0
+  ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_DATA_WIDTH_SRC 64
+  ad_ip_parameter axi_ad9361_adc_dma CONFIG.SYNC_TRANSFER_START {true}
 
-ad_connect logic_inv/Op1  axi_ad9361/rst
-ad_connect logic_inv/Res  axi_tdd_0/resetn
-ad_connect axi_ad9361/l_clk axi_tdd_0/clk
-ad_connect axi_tdd_0/sync_in tdd_ext_sync
-ad_connect axi_tdd_0/tdd_channel_0 txdata_o
-ad_connect axi_tdd_0/tdd_channel_1 axi_ad9361_adc_dma/fifo_wr_sync
+  ad_connect axi_ad9361_adc_dma/fifo_wr   cpack/packed_fifo_wr
+  ad_connect axi_ad9361_dac_dma/m_axis_ready  VCC
+  ad_connect  axi_ad9361/l_clk        axi_ad9361_adc_dma/fifo_wr_clk
+  ad_connect  axi_ad9361/l_clk        axi_ad9361_dac_dma/m_axis_aclk
+
+  # External TDD
+  set TDD_CHANNEL_CNT 3
+  set TDD_DEFAULT_POL 0b010
+  set TDD_REG_WIDTH 32
+  set TDD_BURST_WIDTH 32
+  set TDD_SYNC_WIDTH 0
+  set TDD_SYNC_INT 0
+  set TDD_SYNC_EXT 1
+  set TDD_SYNC_EXT_CDC 1
+  ad_tdd_gen_create axi_tdd_0 $TDD_CHANNEL_CNT \
+                              $TDD_DEFAULT_POL \
+                              $TDD_REG_WIDTH \
+                              $TDD_BURST_WIDTH \
+                              $TDD_SYNC_WIDTH \
+                              $TDD_SYNC_INT \
+                              $TDD_SYNC_EXT \
+                              $TDD_SYNC_EXT_CDC
+
+  ad_ip_instance util_vector_logic logic_inv [list \
+    C_OPERATION {not} \
+    C_SIZE 1]
+
+  ad_connect logic_inv/Op1  axi_ad9361/rst
+  ad_connect logic_inv/Res  axi_tdd_0/resetn
+  ad_connect axi_ad9361/l_clk axi_tdd_0/clk
+  ad_connect axi_tdd_0/sync_in tdd_ext_sync
+  ad_connect axi_tdd_0/tdd_channel_0 txdata_o
+  ad_connect axi_tdd_0/tdd_channel_1 axi_ad9361_adc_dma/fifo_wr_sync
+
+  ad_cpu_interconnect 0x7C440000 axi_tdd_0
+  ad_cpu_interconnect 0x7C400000 axi_ad9361_adc_dma
+  ad_cpu_interconnect 0x7C420000 axi_ad9361_dac_dma
+
+  ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP1 {1}
+  ad_connect axi_ad9361_adc_dma/m_dest_axi sys_ps7/S_AXI_HP1
+
+  create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
+                      [get_bd_addr_spaces axi_ad9361_adc_dma/m_dest_axi] \
+                      [get_bd_addr_segs sys_ps7/S_AXI_HP1/HP1_DDR_LOWOCM] \
+                      SEG_sys_ps7_HP1_DDR_LOWOCM
+
+  ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP2 {1}
+  ad_connect axi_ad9361_dac_dma/m_src_axi sys_ps7/S_AXI_HP2
+
+  create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
+                      [get_bd_addr_spaces axi_ad9361_dac_dma/m_src_axi] \
+                      [get_bd_addr_segs sys_ps7/S_AXI_HP2/HP2_DDR_LOWOCM] \
+                      SEG_sys_ps7_HP2_DDR_LOWOCM
+
+  ad_connect sys_cpu_clk    axi_ad9361_dac_dma/m_src_axi_aclk
+  ad_connect sys_cpu_resetn axi_ad9361_dac_dma/m_src_axi_aresetn
+  ad_connect sys_cpu_clk    axi_ad9361_adc_dma/m_dest_axi_aclk
+  ad_connect sys_cpu_resetn axi_ad9361_adc_dma/m_dest_axi_aresetn
+
+  ad_cpu_interrupt ps-13  mb-13   axi_ad9361_adc_dma/irq
+  ad_cpu_interrupt ps-12  mb-12   axi_ad9361_dac_dma/irq
+}
+
+ad_connect sys_cpu_clk sys_ps7/S_AXI_HP1_ACLK
+ad_connect sys_cpu_clk sys_ps7/S_AXI_HP2_ACLK
 
 # interconnects
 
 ad_cpu_interconnect 0x79020000 axi_ad9361
-ad_cpu_interconnect 0x7C400000 axi_ad9361_adc_dma
-ad_cpu_interconnect 0x7C420000 axi_ad9361_dac_dma
+
 ad_cpu_interconnect 0x7C430000 axi_spi
-ad_cpu_interconnect 0x7C440000 axi_tdd_0
 ad_cpu_interconnect 0x7C450000 axi_custom_dma_d2h
 ad_cpu_interconnect 0x7C460000 axi_custom_dma_h2d
-
-ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP1 {1}
-ad_connect sys_cpu_clk sys_ps7/S_AXI_HP1_ACLK
-ad_connect axi_ad9361_adc_dma/m_dest_axi sys_ps7/S_AXI_HP1
-
-create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
-                    [get_bd_addr_spaces axi_ad9361_adc_dma/m_dest_axi] \
-                    [get_bd_addr_segs sys_ps7/S_AXI_HP1/HP1_DDR_LOWOCM] \
-                    SEG_sys_ps7_HP1_DDR_LOWOCM
-
-ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP2 {1}
-ad_connect sys_cpu_clk sys_ps7/S_AXI_HP2_ACLK
-ad_connect axi_ad9361_dac_dma/m_src_axi sys_ps7/S_AXI_HP2
-
-create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
-                    [get_bd_addr_spaces axi_ad9361_dac_dma/m_src_axi] \
-                    [get_bd_addr_segs sys_ps7/S_AXI_HP2/HP2_DDR_LOWOCM] \
-                    SEG_sys_ps7_HP2_DDR_LOWOCM
 
 # D2H DMA
 ad_ip_parameter sys_ps7                       CONFIG.PCW_USE_S_AXI_HP3 {1}
@@ -376,11 +390,6 @@ create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
 
 # DMA loopback for testing
 #ad_connect axi_custom_dma_h2d/m_axis axi_custom_dma_d2h/s_axis
-
-ad_connect sys_cpu_clk    axi_ad9361_dac_dma/m_src_axi_aclk
-ad_connect sys_cpu_resetn axi_ad9361_dac_dma/m_src_axi_aresetn
-ad_connect sys_cpu_clk    axi_ad9361_adc_dma/m_dest_axi_aclk
-ad_connect sys_cpu_resetn axi_ad9361_adc_dma/m_dest_axi_aresetn
 
 ad_connect sys_cpu_clk    axi_custom_dma_d2h/m_dest_axi_aclk
 ad_connect sys_cpu_resetn axi_custom_dma_d2h/m_dest_axi_aresetn
@@ -411,10 +420,6 @@ ad_connect axi_custom_dma_h2d/m_axis  esm_rx/S_axis
 ad_connect axi_custom_dma_d2h/s_axis  esm_rx/M_axis
 
 # interrupts
-
-ad_cpu_interrupt ps-13  mb-13   axi_ad9361_adc_dma/irq
-ad_cpu_interrupt ps-12  mb-12   axi_ad9361_dac_dma/irq
 ad_cpu_interrupt ps-11  mb-11   axi_spi/ip2intc_irpt
-
 ad_cpu_interrupt ps-9   mb-9    axi_custom_dma_d2h/irq
 ad_cpu_interrupt ps-10  mb-10   axi_custom_dma_h2d/irq
