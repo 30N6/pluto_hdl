@@ -2,7 +2,7 @@ source ../../scripts/adi_env.tcl
 source $ad_hdl_dir/projects/scripts/adi_project_xilinx.tcl
 source $ad_hdl_dir/projects/scripts/adi_board.tcl
 
-set INSERT_ILA 1
+set INSERT_ILA 0
 
 adi_project_create pluto_esm 0 {} "xc7z010clg225-1"
 
