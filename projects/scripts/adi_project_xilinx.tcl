@@ -23,6 +23,8 @@ set ADI_USE_INCR_COMP 1
 ## Set to enable power optimization
 set ADI_POWER_OPTIMIZATION 0
 
+set INSERT_ILA 0
+
 ## Initialize global variables
 set p_board "not-applicable"
 set p_device "none"
@@ -297,6 +299,8 @@ proc adi_project_create {project_name mode parameter_list device {board "not-app
     }
   }
 
+  set_property strategy Performance_Auto_1 [get_runs impl_1]
+
 }
 
 ## Add source files to an exiting project.
@@ -330,6 +334,7 @@ proc adi_project_run {project_name} {
   global ADI_POWER_OPTIMIZATION
   global ADI_USE_OOC_SYNTHESIS
   global ADI_MAX_OOC_JOBS
+  global INSERT_ILA
 
   if {![info exists ::env(ADI_PROJECT_DIR)]} {
     set actual_project_name $project_name
@@ -350,6 +355,11 @@ proc adi_project_run {project_name} {
   }
   wait_on_run synth_1
   open_run synth_1
+
+  if {$INSERT_ILA == 1} {
+    source system_ila.tcl
+  }
+
   report_timing_summary -file ${ad_project_dir}timing_synth.log
 
   if {![info exists ::env(ADI_NO_BITSTREAM_COMPRESSION)] && ![info exists ADI_NO_BITSTREAM_COMPRESSION]} {
