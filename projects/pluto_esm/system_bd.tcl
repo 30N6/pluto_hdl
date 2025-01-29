@@ -297,34 +297,34 @@ ad_connect  axi_ad9361/l_clk        axi_ad9361_dac_dma/m_axis_aclk
 ad_connect  cpack/fifo_wr_overflow  axi_ad9361/adc_dovf
 
 # External TDD
-set TDD_CHANNEL_CNT 3
-set TDD_DEFAULT_POL 0b010
-set TDD_REG_WIDTH 32
-set TDD_BURST_WIDTH 32
-set TDD_SYNC_WIDTH 0
-set TDD_SYNC_INT 0
-set TDD_SYNC_EXT 1
-set TDD_SYNC_EXT_CDC 1
-ad_tdd_gen_create axi_tdd_0 $TDD_CHANNEL_CNT \
-                            $TDD_DEFAULT_POL \
-                            $TDD_REG_WIDTH \
-                            $TDD_BURST_WIDTH \
-                            $TDD_SYNC_WIDTH \
-                            $TDD_SYNC_INT \
-                            $TDD_SYNC_EXT \
-                            $TDD_SYNC_EXT_CDC
+#set TDD_CHANNEL_CNT 3
+#set TDD_DEFAULT_POL 0b010
+#set TDD_REG_WIDTH 32
+#set TDD_BURST_WIDTH 32
+#set TDD_SYNC_WIDTH 0
+#set TDD_SYNC_INT 0
+#set TDD_SYNC_EXT 1
+#set TDD_SYNC_EXT_CDC 1
+#ad_tdd_gen_create axi_tdd_0 $TDD_CHANNEL_CNT \
+#                            $TDD_DEFAULT_POL \
+#                            $TDD_REG_WIDTH \
+#                            $TDD_BURST_WIDTH \
+#                            $TDD_SYNC_WIDTH \
+#                            $TDD_SYNC_INT \
+#                            $TDD_SYNC_EXT \
+#                            $TDD_SYNC_EXT_CDC
 
 ad_ip_instance util_vector_logic logic_inv [list \
   C_OPERATION {not} \
   C_SIZE 1]
 
 ad_connect logic_inv/Op1  axi_ad9361/rst
-ad_connect logic_inv/Res  axi_tdd_0/resetn
-ad_connect axi_ad9361/l_clk axi_tdd_0/clk
+#ad_connect logic_inv/Res  axi_tdd_0/resetn
+#ad_connect axi_ad9361/l_clk axi_tdd_0/clk
 #ad_connect axi_tdd_0/sync_in tdd_ext_sync
 #ad_connect axi_tdd_0/tdd_channel_0 txdata_o
 #ad_connect axi_tdd_0/tdd_channel_1 axi_ad9361_adc_dma/fifo_wr_sync
-ad_connect axi_tdd_0/sync_in                GND
+#ad_connect axi_tdd_0/sync_in                GND
 ad_connect txdata_o                         GND
 ad_connect axi_ad9361_adc_dma/fifo_wr_sync  VCC
 
@@ -334,7 +334,7 @@ ad_cpu_interconnect 0x79020000 axi_ad9361
 ad_cpu_interconnect 0x7C400000 axi_ad9361_adc_dma
 ad_cpu_interconnect 0x7C420000 axi_ad9361_dac_dma
 ad_cpu_interconnect 0x7C430000 axi_spi
-ad_cpu_interconnect 0x7C440000 axi_tdd_0
+#ad_cpu_interconnect 0x7C440000 axi_tdd_0
 ad_cpu_interconnect 0x7C450000 axi_custom_dma_d2h
 ad_cpu_interconnect 0x7C460000 axi_custom_dma_h2d
 
