@@ -201,7 +201,7 @@ ad_ip_parameter axi_ad9361 CONFIG.CMOS_OR_LVDS_N        1
 ad_ip_parameter axi_ad9361 CONFIG.MODE_1R1T             1
 ad_ip_parameter axi_ad9361 CONFIG.ADC_INIT_DELAY        21
 ad_ip_parameter axi_ad9361 CONFIG.DAC_DATAPATH_DISABLE  1
-
+ad_ip_parameter axi_ad9361 CONFIG.DAC_DDS_DISABLE       1
 
 ad_ip_instance axi_dmac axi_ad9361_dac_dma
 ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_TYPE_SRC 0
@@ -281,7 +281,8 @@ ad_connect cpack/fifo_wr_data_0     axi_ad9361/adc_data_i0
 ad_connect cpack/fifo_wr_data_1     axi_ad9361/adc_data_q0
 ad_connect axi_ad9361/adc_valid_i0  cpack/fifo_wr_en
 
-ad_connect axi_ad9361_adc_dma/fifo_wr   cpack/packed_fifo_wr
+ad_connect axi_ad9361_adc_dma/fifo_wr       cpack/packed_fifo_wr
+ad_connect axi_ad9361_adc_dma/fifo_wr_sync  VCC
 #ad_connect axi_ad9361/up_adc_gpio_out   decim_slice/Din
 #ad_connect rx_fir_decimator/active      decim_slice/Dout
 
@@ -296,37 +297,14 @@ ad_connect  axi_ad9361/l_clk        axi_ad9361_adc_dma/fifo_wr_clk
 ad_connect  axi_ad9361/l_clk        axi_ad9361_dac_dma/m_axis_aclk
 ad_connect  cpack/fifo_wr_overflow  axi_ad9361/adc_dovf
 
-# External TDD
-#set TDD_CHANNEL_CNT 3
-#set TDD_DEFAULT_POL 0b010
-#set TDD_REG_WIDTH 32
-#set TDD_BURST_WIDTH 32
-#set TDD_SYNC_WIDTH 0
-#set TDD_SYNC_INT 0
-#set TDD_SYNC_EXT 1
-#set TDD_SYNC_EXT_CDC 1
-#ad_tdd_gen_create axi_tdd_0 $TDD_CHANNEL_CNT \
-#                            $TDD_DEFAULT_POL \
-#                            $TDD_REG_WIDTH \
-#                            $TDD_BURST_WIDTH \
-#                            $TDD_SYNC_WIDTH \
-#                            $TDD_SYNC_INT \
-#                            $TDD_SYNC_EXT \
-#                            $TDD_SYNC_EXT_CDC
 
 ad_ip_instance util_vector_logic logic_inv [list \
   C_OPERATION {not} \
   C_SIZE 1]
 
 ad_connect logic_inv/Op1  axi_ad9361/rst
-#ad_connect logic_inv/Res  axi_tdd_0/resetn
-#ad_connect axi_ad9361/l_clk axi_tdd_0/clk
-#ad_connect axi_tdd_0/sync_in tdd_ext_sync
-#ad_connect axi_tdd_0/tdd_channel_0 txdata_o
-#ad_connect axi_tdd_0/tdd_channel_1 axi_ad9361_adc_dma/fifo_wr_sync
-#ad_connect axi_tdd_0/sync_in                GND
-ad_connect txdata_o                         GND
-ad_connect axi_ad9361_adc_dma/fifo_wr_sync  VCC
+ad_connect txdata_o GND
+
 
 # interconnects
 
