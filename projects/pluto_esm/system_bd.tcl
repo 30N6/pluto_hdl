@@ -47,7 +47,7 @@ ad_ip_parameter sys_ps7 CONFIG.PCW_PRESET_BANK1_VOLTAGE {LVCMOS 1.8V}
 ad_ip_parameter sys_ps7 CONFIG.PCW_PACKAGE_NAME clg225
 ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP0 1
 ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP1 1
-ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP2 1
+ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP2 0
 ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP3 1
 ad_ip_parameter sys_ps7 CONFIG.PCW_EN_CLK1_PORT 1
 ad_ip_parameter sys_ps7 CONFIG.PCW_EN_RST1_PORT 1
@@ -283,8 +283,6 @@ ad_connect axi_ad9361/adc_valid_i0  cpack/fifo_wr_en
 
 ad_connect axi_ad9361_adc_dma/fifo_wr       cpack/packed_fifo_wr
 ad_connect axi_ad9361_adc_dma/fifo_wr_sync  VCC
-#ad_connect axi_ad9361/up_adc_gpio_out   decim_slice/Din
-#ad_connect rx_fir_decimator/active      decim_slice/Dout
 
 ad_connect axi_ad9361/dac_data_i0           GND
 ad_connect axi_ad9361/dac_data_q0           GND
@@ -325,14 +323,14 @@ create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
                     [get_bd_addr_segs sys_ps7/S_AXI_HP1/HP1_DDR_LOWOCM] \
                     SEG_sys_ps7_HP1_DDR_LOWOCM
 
-ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP2 {1}
-ad_connect sys_cpu_clk sys_ps7/S_AXI_HP2_ACLK
-ad_connect axi_ad9361_dac_dma/m_src_axi sys_ps7/S_AXI_HP2
+#ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP2 {1}
+#ad_connect sys_cpu_clk sys_ps7/S_AXI_HP2_ACLK
+#ad_connect axi_ad9361_dac_dma/m_src_axi sys_ps7/S_AXI_HP2
 
-create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
-                    [get_bd_addr_spaces axi_ad9361_dac_dma/m_src_axi] \
-                    [get_bd_addr_segs sys_ps7/S_AXI_HP2/HP2_DDR_LOWOCM] \
-                    SEG_sys_ps7_HP2_DDR_LOWOCM
+#create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
+#                    [get_bd_addr_spaces axi_ad9361_dac_dma/m_src_axi] \
+#                    [get_bd_addr_segs sys_ps7/S_AXI_HP2/HP2_DDR_LOWOCM] \
+#                    SEG_sys_ps7_HP2_DDR_LOWOCM
 
 # D2H DMA
 ad_ip_parameter sys_ps7                       CONFIG.PCW_USE_S_AXI_HP3 {1}
