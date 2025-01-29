@@ -221,7 +221,6 @@ ad_ip_parameter axi_ad9361_adc_dma CONFIG.AXI_SLICE_SRC 0
 ad_ip_parameter axi_ad9361_adc_dma CONFIG.AXI_SLICE_DEST 0
 ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_2D_TRANSFER 0
 ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_DATA_WIDTH_SRC 64
-ad_ip_parameter axi_ad9361_adc_dma CONFIG.SYNC_TRANSFER_START {true}
 
 ad_ip_instance axi_dmac axi_custom_dma_d2h
 ad_ip_parameter axi_custom_dma_d2h CONFIG.DMA_TYPE_SRC          1
@@ -322,9 +321,12 @@ ad_ip_instance util_vector_logic logic_inv [list \
 ad_connect logic_inv/Op1  axi_ad9361/rst
 ad_connect logic_inv/Res  axi_tdd_0/resetn
 ad_connect axi_ad9361/l_clk axi_tdd_0/clk
-ad_connect axi_tdd_0/sync_in tdd_ext_sync
-ad_connect axi_tdd_0/tdd_channel_0 txdata_o
-ad_connect axi_tdd_0/tdd_channel_1 axi_ad9361_adc_dma/fifo_wr_sync
+#ad_connect axi_tdd_0/sync_in tdd_ext_sync
+#ad_connect axi_tdd_0/tdd_channel_0 txdata_o
+#ad_connect axi_tdd_0/tdd_channel_1 axi_ad9361_adc_dma/fifo_wr_sync
+ad_connect axi_tdd_0/sync_in                GND
+ad_connect txdata_o                         GND
+ad_connect axi_ad9361_adc_dma/fifo_wr_sync  VCC
 
 # interconnects
 
