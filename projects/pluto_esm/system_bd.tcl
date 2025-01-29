@@ -210,7 +210,7 @@ ad_ip_parameter axi_ad9361_dac_dma CONFIG.CYCLIC 1
 ad_ip_parameter axi_ad9361_dac_dma CONFIG.AXI_SLICE_SRC 0
 ad_ip_parameter axi_ad9361_dac_dma CONFIG.AXI_SLICE_DEST 0
 ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_2D_TRANSFER 0
-ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_DATA_WIDTH_DEST 64
+ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_DATA_WIDTH_DEST 16
 
 ad_ip_instance axi_dmac axi_ad9361_adc_dma
 ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_TYPE_SRC 2
@@ -282,7 +282,6 @@ ad_connect cpack/fifo_wr_data_1     axi_ad9361/adc_data_q0
 ad_connect axi_ad9361/adc_valid_i0  cpack/fifo_wr_en
 
 ad_connect axi_ad9361_adc_dma/fifo_wr       cpack/packed_fifo_wr
-ad_connect axi_ad9361_adc_dma/fifo_wr_sync  VCC
 
 ad_connect axi_ad9361/dac_data_i0           GND
 ad_connect axi_ad9361/dac_data_q0           GND
