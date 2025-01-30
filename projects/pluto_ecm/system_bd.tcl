@@ -47,7 +47,7 @@ ad_ip_parameter sys_ps7 CONFIG.PCW_PRESET_BANK1_VOLTAGE {LVCMOS 1.8V}
 ad_ip_parameter sys_ps7 CONFIG.PCW_PACKAGE_NAME clg225
 ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP0 1
 ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP1 1
-ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP2 1
+ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP2 0
 ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP3 1
 ad_ip_parameter sys_ps7 CONFIG.PCW_EN_CLK1_PORT 1
 ad_ip_parameter sys_ps7 CONFIG.PCW_EN_RST1_PORT 1
@@ -201,7 +201,7 @@ ad_ip_parameter axi_ad9361 CONFIG.CMOS_OR_LVDS_N        1
 ad_ip_parameter axi_ad9361 CONFIG.MODE_1R1T             1
 ad_ip_parameter axi_ad9361 CONFIG.ADC_INIT_DELAY        21
 ad_ip_parameter axi_ad9361 CONFIG.DAC_DATAPATH_DISABLE  1
-
+ad_ip_parameter axi_ad9361 CONFIG.DAC_DDS_DISABLE       1
 
 ad_ip_instance axi_dmac axi_ad9361_dac_dma
 ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_TYPE_SRC 0
@@ -210,7 +210,7 @@ ad_ip_parameter axi_ad9361_dac_dma CONFIG.CYCLIC 1
 ad_ip_parameter axi_ad9361_dac_dma CONFIG.AXI_SLICE_SRC 0
 ad_ip_parameter axi_ad9361_dac_dma CONFIG.AXI_SLICE_DEST 0
 ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_2D_TRANSFER 0
-ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_DATA_WIDTH_DEST 64
+ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_DATA_WIDTH_DEST 16
 
 ad_ip_instance axi_dmac axi_ad9361_adc_dma
 ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_TYPE_SRC 2
@@ -221,7 +221,6 @@ ad_ip_parameter axi_ad9361_adc_dma CONFIG.AXI_SLICE_SRC 0
 ad_ip_parameter axi_ad9361_adc_dma CONFIG.AXI_SLICE_DEST 0
 ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_2D_TRANSFER 0
 ad_ip_parameter axi_ad9361_adc_dma CONFIG.DMA_DATA_WIDTH_SRC 64
-ad_ip_parameter axi_ad9361_adc_dma CONFIG.SYNC_TRANSFER_START {true}
 
 ad_ip_instance axi_dmac axi_custom_dma_d2h
 ad_ip_parameter axi_custom_dma_d2h CONFIG.DMA_TYPE_SRC          1
@@ -248,6 +247,7 @@ ad_ip_instance esm_clocks ecm_clocks
 ad_ip_instance ecm_top ecm
 ad_ip_parameter ecm CONFIG.AXI_DATA_WIDTH  32
 ad_ip_parameter ecm CONFIG.ADC_WIDTH       16
+ad_ip_parameter ecm CONFIG.DAC_WIDTH       16
 ad_ip_parameter ecm CONFIG.IQ_WIDTH        12
 
 # connections
@@ -283,11 +283,7 @@ ad_connect cpack/fifo_wr_data_1     axi_ad9361/adc_data_q0
 ad_connect axi_ad9361/adc_valid_i0  cpack/fifo_wr_en
 
 ad_connect axi_ad9361_adc_dma/fifo_wr   cpack/packed_fifo_wr
-#ad_connect axi_ad9361/up_adc_gpio_out   decim_slice/Din
-#ad_connect rx_fir_decimator/active      decim_slice/Dout
 
-ad_connect axi_ad9361/dac_data_i0           GND
-ad_connect axi_ad9361/dac_data_q0           GND
 ad_connect axi_ad9361/dac_data_i1           GND
 ad_connect axi_ad9361/dac_data_q1           GND
 ad_connect axi_ad9361/dac_dunf              GND
@@ -297,34 +293,12 @@ ad_connect  axi_ad9361/l_clk        axi_ad9361_adc_dma/fifo_wr_clk
 ad_connect  axi_ad9361/l_clk        axi_ad9361_dac_dma/m_axis_aclk
 ad_connect  cpack/fifo_wr_overflow  axi_ad9361/adc_dovf
 
-# External TDD
-set TDD_CHANNEL_CNT 3
-set TDD_DEFAULT_POL 0b010
-set TDD_REG_WIDTH 32
-set TDD_BURST_WIDTH 32
-set TDD_SYNC_WIDTH 0
-set TDD_SYNC_INT 0
-set TDD_SYNC_EXT 1
-set TDD_SYNC_EXT_CDC 1
-ad_tdd_gen_create axi_tdd_0 $TDD_CHANNEL_CNT \
-                            $TDD_DEFAULT_POL \
-                            $TDD_REG_WIDTH \
-                            $TDD_BURST_WIDTH \
-                            $TDD_SYNC_WIDTH \
-                            $TDD_SYNC_INT \
-                            $TDD_SYNC_EXT \
-                            $TDD_SYNC_EXT_CDC
-
 ad_ip_instance util_vector_logic logic_inv [list \
   C_OPERATION {not} \
   C_SIZE 1]
 
 ad_connect logic_inv/Op1  axi_ad9361/rst
-ad_connect logic_inv/Res  axi_tdd_0/resetn
-ad_connect axi_ad9361/l_clk axi_tdd_0/clk
-ad_connect axi_tdd_0/sync_in tdd_ext_sync
-ad_connect axi_tdd_0/tdd_channel_0 txdata_o
-ad_connect axi_tdd_0/tdd_channel_1 axi_ad9361_adc_dma/fifo_wr_sync
+ad_connect txdata_o GND
 
 # interconnects
 
@@ -332,7 +306,7 @@ ad_cpu_interconnect 0x79020000 axi_ad9361
 ad_cpu_interconnect 0x7C400000 axi_ad9361_adc_dma
 ad_cpu_interconnect 0x7C420000 axi_ad9361_dac_dma
 ad_cpu_interconnect 0x7C430000 axi_spi
-ad_cpu_interconnect 0x7C440000 axi_tdd_0
+#ad_cpu_interconnect 0x7C440000 axi_tdd_0
 ad_cpu_interconnect 0x7C450000 axi_custom_dma_d2h
 ad_cpu_interconnect 0x7C460000 axi_custom_dma_h2d
 
@@ -345,14 +319,14 @@ create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
                     [get_bd_addr_segs sys_ps7/S_AXI_HP1/HP1_DDR_LOWOCM] \
                     SEG_sys_ps7_HP1_DDR_LOWOCM
 
-ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP2 {1}
-ad_connect sys_cpu_clk sys_ps7/S_AXI_HP2_ACLK
-ad_connect axi_ad9361_dac_dma/m_src_axi sys_ps7/S_AXI_HP2
-
-create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
-                    [get_bd_addr_spaces axi_ad9361_dac_dma/m_src_axi] \
-                    [get_bd_addr_segs sys_ps7/S_AXI_HP2/HP2_DDR_LOWOCM] \
-                    SEG_sys_ps7_HP2_DDR_LOWOCM
+#ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP2 {1}
+#ad_connect sys_cpu_clk sys_ps7/S_AXI_HP2_ACLK
+#ad_connect axi_ad9361_dac_dma/m_src_axi sys_ps7/S_AXI_HP2
+#
+#create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
+#                    [get_bd_addr_spaces axi_ad9361_dac_dma/m_src_axi] \
+#                    [get_bd_addr_segs sys_ps7/S_AXI_HP2/HP2_DDR_LOWOCM] \
+#                    SEG_sys_ps7_HP2_DDR_LOWOCM
 
 # D2H DMA
 ad_ip_parameter sys_ps7                       CONFIG.PCW_USE_S_AXI_HP3 {1}
