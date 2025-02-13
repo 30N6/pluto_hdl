@@ -8,17 +8,17 @@ set_property C_EN_STRG_QUAL false [get_debug_cores u_ila_0]
 set_property ALL_PROBE_SAME_MU true [get_debug_cores u_ila_0]
 set_property ALL_PROBE_SAME_MU_CNT 1 [get_debug_cores u_ila_0]
 connect_debug_port u_ila_0/clk [get_nets [list i_system_wrapper/system_i/ecm_clocks/inst/i_clocking/inst/Adc_clk_x4 ]]
-set_property port_width 9 [get_debug_ports u_ila_0/probe0]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe0]
-connect_debug_port u_ila_0/probe0 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[1]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[2]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[3]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[4]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[5]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[6]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[7]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[8]} ]]
+set_property port_width 4 [get_debug_ports u_ila_0/probe0]
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe0]
+connect_debug_port u_ila_0/probe0 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/s_state[0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/s_state[1]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/s_state[2]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/s_state[3]} ]]
 create_debug_port u_ila_0 probe
 set_property port_width 9 [get_debug_ports u_ila_0/probe1]
 set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe1]
 connect_debug_port u_ila_0/probe1 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_instruction_index[0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_instruction_index[1]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_instruction_index[2]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_instruction_index[3]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_instruction_index[4]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_instruction_index[5]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_instruction_index[6]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_instruction_index[7]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_instruction_index[8]} ]]
 create_debug_port u_ila_0 probe
-set_property port_width 2 [get_debug_ports u_ila_0/probe2]
+set_property port_width 9 [get_debug_ports u_ila_0/probe2]
 set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe2]
-connect_debug_port u_ila_0/probe2 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[trigger_mode][0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[trigger_mode][1]} ]]
+connect_debug_port u_ila_0/probe2 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[1]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[2]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[3]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[4]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[5]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[6]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[7]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_index[8]} ]]
 create_debug_port u_ila_0 probe
 set_property port_width 64 [get_debug_ports u_ila_0/probe3]
 set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe3]
@@ -26,123 +26,67 @@ connect_debug_port u_ila_0/probe3 [get_nets [list {i_system_wrapper/system_i/ecm
 create_debug_port u_ila_0 probe
 set_property port_width 4 [get_debug_ports u_ila_0/probe4]
 set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe4]
-connect_debug_port u_ila_0/probe4 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[trigger_hyst_shift][0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[trigger_hyst_shift][1]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[trigger_hyst_shift][2]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[trigger_hyst_shift][3]} ]]
+connect_debug_port u_ila_0/probe4 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_channel[0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_channel[1]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_channel[2]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_channel[3]} ]]
 create_debug_port u_ila_0 probe
-set_property port_width 12 [get_debug_ports u_ila_0/probe5]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe5]
-connect_debug_port u_ila_0/probe5 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_max_minus_one][0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_max_minus_one][1]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_max_minus_one][2]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_max_minus_one][3]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_max_minus_one][4]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_max_minus_one][5]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_max_minus_one][6]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_max_minus_one][7]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_max_minus_one][8]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_max_minus_one][9]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_max_minus_one][10]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_max_minus_one][11]} ]]
+set_property port_width 1 [get_debug_ports u_ila_0/probe5]
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe5]
+connect_debug_port u_ila_0/probe5 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_active ]]
 create_debug_port u_ila_0 probe
-set_property port_width 4 [get_debug_ports u_ila_0/probe6]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe6]
-connect_debug_port u_ila_0/probe6 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_channel[0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_channel[1]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_channel[2]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_channel[3]} ]]
+set_property port_width 1 [get_debug_ports u_ila_0/probe6]
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe6]
+connect_debug_port u_ila_0/probe6 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_active_meas ]]
 create_debug_port u_ila_0 probe
-set_property port_width 9 [get_debug_ports u_ila_0/probe7]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe7]
-connect_debug_port u_ila_0/probe7 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_index[0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_index[1]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_index[2]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_index[3]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_index[4]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_index[5]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_index[6]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_index[7]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_index[8]} ]]
+set_property port_width 1 [get_debug_ports u_ila_0/probe7]
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe7]
+connect_debug_port u_ila_0/probe7 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_active_tx ]]
 create_debug_port u_ila_0 probe
-set_property port_width 9 [get_debug_ports u_ila_0/probe8]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe8]
-connect_debug_port u_ila_0/probe8 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][tx_instruction_index][0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][tx_instruction_index][1]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][tx_instruction_index][2]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][tx_instruction_index][3]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][tx_instruction_index][4]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][tx_instruction_index][5]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][tx_instruction_index][6]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][tx_instruction_index][7]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][tx_instruction_index][8]} ]]
+set_property port_width 1 [get_debug_ports u_ila_0/probe8]
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe8]
+connect_debug_port u_ila_0/probe8 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_done_meas ]]
 create_debug_port u_ila_0 probe
-set_property port_width 12 [get_debug_ports u_ila_0/probe9]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe9]
-connect_debug_port u_ila_0/probe9 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_min_minus_one][0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_min_minus_one][1]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_min_minus_one][2]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_min_minus_one][3]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_min_minus_one][4]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_min_minus_one][5]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_min_minus_one][6]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_min_minus_one][7]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_min_minus_one][8]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_min_minus_one][9]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_min_minus_one][10]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][duration_gate_min_minus_one][11]} ]]
+set_property port_width 1 [get_debug_ports u_ila_0/probe9]
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe9]
+connect_debug_port u_ila_0/probe9 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_done_total ]]
 create_debug_port u_ila_0 probe
-set_property port_width 4 [get_debug_ports u_ila_0/probe10]
+set_property port_width 1 [get_debug_ports u_ila_0/probe10]
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe10]
-connect_debug_port u_ila_0/probe10 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/s_state[0]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/s_state[1]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/s_state[2]} {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/s_state[3]} ]]
+connect_debug_port u_ila_0/probe10 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_meas_flush_done ]]
 create_debug_port u_ila_0 probe
 set_property port_width 1 [get_debug_ports u_ila_0/probe11]
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe11]
-connect_debug_port u_ila_0/probe11 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_active ]]
+connect_debug_port u_ila_0/probe11 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_report_wait ]]
 create_debug_port u_ila_0 probe
 set_property port_width 1 [get_debug_ports u_ila_0/probe12]
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe12]
-connect_debug_port u_ila_0/probe12 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_active_meas ]]
+connect_debug_port u_ila_0/probe12 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_start_meas ]]
 create_debug_port u_ila_0 probe
 set_property port_width 1 [get_debug_ports u_ila_0/probe13]
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe13]
-connect_debug_port u_ila_0/probe13 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_active_tx ]]
+connect_debug_port u_ila_0/probe13 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_report_received_drfm ]]
 create_debug_port u_ila_0 probe
 set_property port_width 1 [get_debug_ports u_ila_0/probe14]
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe14]
-connect_debug_port u_ila_0/probe14 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_done_meas ]]
+connect_debug_port u_ila_0/probe14 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_report_received_stats ]]
 create_debug_port u_ila_0 probe
 set_property port_width 1 [get_debug_ports u_ila_0/probe15]
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe15]
-connect_debug_port u_ila_0/probe15 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_done_total ]]
+connect_debug_port u_ila_0/probe15 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_trigger_immediate_tx ]]
 create_debug_port u_ila_0 probe
 set_property port_width 1 [get_debug_ports u_ila_0/probe16]
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe16]
-connect_debug_port u_ila_0/probe16 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_meas_flush_done ]]
+connect_debug_port u_ila_0/probe16 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_trigger_pending ]]
 create_debug_port u_ila_0 probe
 set_property port_width 1 [get_debug_ports u_ila_0/probe17]
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe17]
-connect_debug_port u_ila_0/probe17 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_report_wait ]]
+connect_debug_port u_ila_0/probe17 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_instruction_valid ]]
 create_debug_port u_ila_0 probe
 set_property port_width 1 [get_debug_ports u_ila_0/probe18]
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe18]
-connect_debug_port u_ila_0/probe18 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_dwell_start_meas ]]
+connect_debug_port u_ila_0/probe18 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_valid ]]
 create_debug_port u_ila_0 probe
 set_property port_width 1 [get_debug_ports u_ila_0/probe19]
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe19]
-connect_debug_port u_ila_0/probe19 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_report_received_drfm ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe20]
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe20]
-connect_debug_port u_ila_0/probe20 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/r_report_received_stats ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe21]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe21]
-connect_debug_port u_ila_0/probe21 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[enable]} ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe22]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe22]
-connect_debug_port u_ila_0/probe22 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][trigger_immediate_after_min]} ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe23]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe23]
-connect_debug_port u_ila_0/probe23 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][0][valid]} ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe24]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe24]
-connect_debug_port u_ila_0/probe24 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][1][valid]} ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe25]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe25]
-connect_debug_port u_ila_0/probe25 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][2][valid]} ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe26]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe26]
-connect_debug_port u_ila_0/probe26 [get_nets [list {i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_data[program_entries][3][valid]} ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe27]
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe27]
-connect_debug_port u_ila_0/probe27 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_channel_entry_valid ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe28]
-set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe28]
-connect_debug_port u_ila_0/probe28 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_dwell_program_valid ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe29]
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe29]
-connect_debug_port u_ila_0/probe29 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_trigger_immediate_tx ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe30]
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe30]
-connect_debug_port u_ila_0/probe30 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_trigger_pending ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe31]
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe31]
-connect_debug_port u_ila_0/probe31 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_instruction_valid ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe32]
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe32]
-connect_debug_port u_ila_0/probe32 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_program_req_valid ]]
-create_debug_port u_ila_0 probe
-set_property port_width 1 [get_debug_ports u_ila_0/probe33]
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe33]
-connect_debug_port u_ila_0/probe33 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_programs_done ]]
+connect_debug_port u_ila_0/probe19 [get_nets [list i_system_wrapper/system_i/ecm/inst/i_dwell_controller/w_tx_programs_done ]]
 
 set_property target_constrs_file system_constr.xdc [current_fileset -constrset]
 save_constraints -force
