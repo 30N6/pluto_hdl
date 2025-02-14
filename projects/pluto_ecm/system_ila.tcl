@@ -7,11 +7,7 @@ set_property C_INPUT_PIPE_STAGES 2 [get_debug_cores u_ila_0]
 set_property C_EN_STRG_QUAL false [get_debug_cores u_ila_0]
 set_property ALL_PROBE_SAME_MU true [get_debug_cores u_ila_0]
 set_property ALL_PROBE_SAME_MU_CNT 1 [get_debug_cores u_ila_0]
-startgroup
-set_property C_EN_STRG_QUAL true [get_debug_cores u_ila_0 ]
-set_property ALL_PROBE_SAME_MU true [get_debug_cores u_ila_0 ]
-set_property ALL_PROBE_SAME_MU_CNT 2 [get_debug_cores u_ila_0 ]
-endgroup
+
 connect_debug_port u_ila_0/clk [get_nets [list i_system_wrapper/system_i/sys_ps7/inst/FCLK_CLK0 ]]
 set_property port_width 28 [get_debug_ports u_ila_0/probe0]
 set_property PROBE_TYPE DATA [get_debug_ports u_ila_0/probe0]
