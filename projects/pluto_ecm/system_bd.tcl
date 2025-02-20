@@ -196,12 +196,13 @@ create_bd_port -dir I up_txnrx
 # ad9361 core(s)
 
 ad_ip_instance axi_ad9361 axi_ad9361
-ad_ip_parameter axi_ad9361 CONFIG.ID                    0
-ad_ip_parameter axi_ad9361 CONFIG.CMOS_OR_LVDS_N        1
-ad_ip_parameter axi_ad9361 CONFIG.MODE_1R1T             1
-ad_ip_parameter axi_ad9361 CONFIG.ADC_INIT_DELAY        21
-ad_ip_parameter axi_ad9361 CONFIG.DAC_DATAPATH_DISABLE  1
-ad_ip_parameter axi_ad9361 CONFIG.DAC_DDS_DISABLE       1
+ad_ip_parameter axi_ad9361 CONFIG.ID                        0
+ad_ip_parameter axi_ad9361 CONFIG.CMOS_OR_LVDS_N            1
+ad_ip_parameter axi_ad9361 CONFIG.MODE_1R1T                 1
+ad_ip_parameter axi_ad9361 CONFIG.ADC_INIT_DELAY            21
+ad_ip_parameter axi_ad9361 CONFIG.DAC_DATAPATH_DISABLE      0
+ad_ip_parameter axi_ad9361 CONFIG.DAC_IQCORRECTION_DISABLE  1
+ad_ip_parameter axi_ad9361 CONFIG.DAC_DDS_DISABLE           1
 
 ad_ip_instance axi_dmac axi_ad9361_dac_dma
 ad_ip_parameter axi_ad9361_dac_dma CONFIG.DMA_TYPE_SRC 0
@@ -242,12 +243,13 @@ ad_ip_parameter axi_custom_dma_h2d CONFIG.AXI_SLICE_DEST        0
 ad_ip_parameter axi_custom_dma_h2d CONFIG.DMA_2D_TRANSFER       0
 ad_ip_parameter axi_custom_dma_h2d CONFIG.DMA_DATA_WIDTH_DEST   32
 
-# ESM receiver
-ad_ip_instance esm_clocks esm_clocks
-ad_ip_instance esm_receiver esm_rx
-ad_ip_parameter esm_rx CONFIG.AXI_DATA_WIDTH  32
-ad_ip_parameter esm_rx CONFIG.ADC_WIDTH       16
-ad_ip_parameter esm_rx CONFIG.IQ_WIDTH        12
+# ECM
+ad_ip_instance esm_clocks ecm_clocks
+ad_ip_instance ecm_top ecm
+ad_ip_parameter ecm CONFIG.AXI_DATA_WIDTH  32
+ad_ip_parameter ecm CONFIG.ADC_WIDTH       16
+ad_ip_parameter ecm CONFIG.DAC_WIDTH       16
+ad_ip_parameter ecm CONFIG.IQ_WIDTH        12
 
 # connections
 
@@ -281,10 +283,8 @@ ad_connect cpack/fifo_wr_data_0     axi_ad9361/adc_data_i0
 ad_connect cpack/fifo_wr_data_1     axi_ad9361/adc_data_q0
 ad_connect axi_ad9361/adc_valid_i0  cpack/fifo_wr_en
 
-ad_connect axi_ad9361_adc_dma/fifo_wr       cpack/packed_fifo_wr
+ad_connect axi_ad9361_adc_dma/fifo_wr   cpack/packed_fifo_wr
 
-ad_connect axi_ad9361/dac_data_i0           GND
-ad_connect axi_ad9361/dac_data_q0           GND
 ad_connect axi_ad9361/dac_data_i1           GND
 ad_connect axi_ad9361/dac_data_q1           GND
 ad_connect axi_ad9361/dac_dunf              GND
@@ -294,14 +294,12 @@ ad_connect  axi_ad9361/l_clk        axi_ad9361_adc_dma/fifo_wr_clk
 ad_connect  axi_ad9361/l_clk        axi_ad9361_dac_dma/m_axis_aclk
 ad_connect  cpack/fifo_wr_overflow  axi_ad9361/adc_dovf
 
-
 ad_ip_instance util_vector_logic logic_inv [list \
   C_OPERATION {not} \
   C_SIZE 1]
 
 ad_connect logic_inv/Op1  axi_ad9361/rst
 ad_connect txdata_o GND
-
 
 # interconnects
 
@@ -325,7 +323,7 @@ create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
 #ad_ip_parameter sys_ps7 CONFIG.PCW_USE_S_AXI_HP2 {1}
 #ad_connect sys_cpu_clk sys_ps7/S_AXI_HP2_ACLK
 #ad_connect axi_ad9361_dac_dma/m_src_axi sys_ps7/S_AXI_HP2
-
+#
 #create_bd_addr_seg -range 0x20000000 -offset 0x00000000 \
 #                    [get_bd_addr_spaces axi_ad9361_dac_dma/m_src_axi] \
 #                    [get_bd_addr_segs sys_ps7/S_AXI_HP2/HP2_DDR_LOWOCM] \
@@ -366,26 +364,28 @@ ad_connect sys_cpu_resetn axi_custom_dma_h2d/m_src_axi_aresetn
 ad_connect sys_cpu_clk    axi_custom_dma_d2h/s_axis_aclk
 ad_connect sys_cpu_clk    axi_custom_dma_h2d/m_axis_aclk
 
-# ESM connections
-ad_connect axi_ad9361/l_clk           esm_clocks/Adc_clk
-ad_connect axi_ad9361/rst             esm_clocks/Adc_rst
+# ECM connections
+ad_connect axi_ad9361/l_clk           ecm_clocks/Adc_clk
+ad_connect axi_ad9361/rst             ecm_clocks/Adc_rst
 
-ad_connect esm_clocks/Adc_clk_x4      esm_rx/Adc_clk_x4
-ad_connect axi_ad9361/l_clk           esm_rx/Adc_clk
-ad_connect axi_ad9361/rst             esm_rx/Adc_rst
-ad_connect axi_ad9361/adc_valid_i0    esm_rx/Adc_valid
-ad_connect axi_ad9361/adc_data_i0     esm_rx/Adc_data_i
-ad_connect axi_ad9361/adc_data_q0     esm_rx/Adc_data_q
+ad_connect ecm_clocks/Adc_clk_x4      ecm/Adc_clk_x4
+ad_connect axi_ad9361/l_clk           ecm/Adc_clk
+ad_connect axi_ad9361/rst             ecm/Adc_rst
+ad_connect axi_ad9361/adc_valid_i0    ecm/Adc_valid
+ad_connect axi_ad9361/adc_data_i0     ecm/Adc_data_i
+ad_connect axi_ad9361/adc_data_q0     ecm/Adc_data_q
+ad_connect axi_ad9361/dac_data_i0     ecm/Dac_data_i
+ad_connect axi_ad9361/dac_data_q0     ecm/Dac_data_q
 
-ad_connect ad9361_status              esm_rx/Ad9361_status
-ad_connect ad9361_ctl                 esm_rx/Ad9361_control
+ad_connect ad9361_status              ecm/Ad9361_status
+ad_connect ad9361_ctl                 ecm/Ad9361_control
 
-ad_connect sys_cpu_clk                esm_rx/S_axis_clk
-ad_connect sys_cpu_resetn             esm_rx/S_axis_resetn
-ad_connect sys_cpu_clk                esm_rx/M_axis_clk
-ad_connect sys_cpu_resetn             esm_rx/M_axis_resetn
-ad_connect axi_custom_dma_h2d/m_axis  esm_rx/S_axis
-ad_connect axi_custom_dma_d2h/s_axis  esm_rx/M_axis
+ad_connect sys_cpu_clk                ecm/S_axis_clk
+ad_connect sys_cpu_resetn             ecm/S_axis_resetn
+ad_connect sys_cpu_clk                ecm/M_axis_clk
+ad_connect sys_cpu_resetn             ecm/M_axis_resetn
+ad_connect axi_custom_dma_h2d/m_axis  ecm/S_axis
+ad_connect axi_custom_dma_d2h/s_axis  ecm/M_axis
 
 # interrupts
 

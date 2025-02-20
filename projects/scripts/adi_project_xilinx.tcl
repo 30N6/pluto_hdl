@@ -299,7 +299,7 @@ proc adi_project_create {project_name mode parameter_list device {board "not-app
     }
   }
 
-  set_property strategy Performance_Auto_1 [get_runs impl_1]
+  set_property strategy Performance_ExplorePostRoutePhysOpt [get_runs impl_1]
 
 }
 
